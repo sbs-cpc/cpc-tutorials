@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Programming Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal: #1ce8a0;
+    --teal-dim: #0f9e6a;
+    --bg: #080c0e;
+    --bg-card: #0d1417;
+    --bg-card-hover: #111c20;
+    --border: rgba(28, 232, 160, 0.12);
+    --text-primary: #e8f5f0;
+    --text-secondary: #7aa898;
+    --text-muted: #3d6058;
+    --font-display: 'Orbitron', monospace;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 16px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(28,232,160,0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  header {
+    padding: 3rem 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3.5rem;
+  }
+
+  .logo-slot {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 0 24px rgba(28,232,160,0.25);
+  }
+
+  .logo-slot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .club-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .club-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2.1rem);
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+
+  .club-name span { color: var(--teal); }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--teal-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.25rem;
+    margin-bottom: 4rem;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    transition: transform 0.22s cubic-bezier(.22,.68,0,1.2),
+                background 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 32px; height: 2px;
+    background: var(--teal);
+    opacity: 0.6;
+    transition: width 0.25s ease, opacity 0.25s ease;
+  }
+
+  .card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px; height: 32px;
+    background: var(--teal);
+    opacity: 0.6;
+    transition: height 0.25s ease, opacity 0.25s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-6px);
+    background: var(--bg-card-hover);
+    border-color: rgba(28,232,160,0.45);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 32px rgba(28,232,160,0.2);
+  }
+
+  .card:hover::before { width: 60px; opacity: 1; }
+  .card:hover::after  { height: 60px; opacity: 1; }
+
+  .card-img {
+    width: calc(100% + 3rem);
+    margin: 0 -1.5rem 0;
+    height: 160px;
+    overflow: hidden;
+    border-radius: 6px 6px 0 0;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .card:hover .card-img img { transform: scale(1.05); }
+
+  .card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(8,12,14,0) 40%, rgba(8,12,14,0.75) 100%);
+    pointer-events: none;
+  }
+
+  .card-img + .card-tag { margin-top: 0.75rem; }
+
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    background: rgba(28,232,160,0.08);
+    border: 1px solid rgba(28,232,160,0.2);
+    border-radius: 2px;
+    padding: 2px 8px;
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .card-title {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.03em;
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-family: var(--font-body);
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid var(--teal-dim);
+    border-radius: 3px;
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    text-transform: uppercase;
+    width: fit-content;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .card-btn:hover {
+    background: var(--teal);
+    color: #050e0a;
+    border-color: var(--teal);
+    box-shadow: 0 0 14px rgba(28,232,160,0.35);
+  }
+
+  .btn-icon {
+    width: 14px; height: 14px;
+    flex-shrink: 0;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+  }
+
+  .footer-dot { color: var(--teal); }
+
+  @media (max-width: 540px) {
+    header { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .club-name { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <div class="logo-slot">
+      <img src="images/logo.png" alt="CPC Logo">
+    </div>
+    <div class="header-text">
+      <div class="club-eyebrow">// South Breeze School</div>
+      <h1 class="club-name">Computer<br><span>Programming</span> Club</h1>
+    </div>
+  </header>
+
+  <div class="section-label">Tutorials &amp; Resources</div>
+
+  <div class="cards-grid">
+
+    <div class="card">
+      <div class="card-img"><img src="images/farewell.png" alt=""></div>
+      <span class="card-tag">Feedback</span>
+      <div class="card-title">CPC Farewell Class Feedback Form</div>
+      <p class="card-desc">Share your thoughts about this year's CPC, and also what you want for next year, here.</p>
+      <a class="card-btn" href="https://forms.gle/EDqhBaHp5E4s5JSa6" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/mental maths.png" alt=""></div>
+      <span class="card-tag">Tutorial</span>
+      <div class="card-title">Python Mental Maths App</div>
+      <p class="card-desc">In this tutorial, you'll build a mental maths app in Python. The app asks you random addition and subtraction questions, and the full version lets you set the range of numbers and re-asks the questions you got wrong.</p>
+      <a class="card-btn" href="https://docs.google.com/presentation/d/1UsrqHz-8KwLjC6pffJba14He_6OSx_23ovi0-a29t1M/edit?usp=sharing" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/space shooter.png" alt=""></div>
+      <span class="card-tag">Tutorial</span>
+      <div class="card-title">Scratch Space Shooter Game</div>
+      <p class="card-desc">In this tutorial, you will build a space shooter game using Scratch.</p>
+      <a class="card-btn" href="https://docs.google.com/presentation/d/1EOCVWZgmWSXZa2uU5CCbYnOy9UvvsgVvxxhbW8lXeBM/edit?usp=sharing" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/hackerrank contest 15-03-2026.png" alt=""></div>
+      <span class="card-tag">Contest</span>
+      <div class="card-title">Hackerrank Contest 05-03-2026</div>
+      <p class="card-desc">A brand new Hackerrank contest which included guided beginner problems with code snippets, as well as logic and iteration problems meant for intermediate and advanced coders.</p>
+      <a class="card-btn" href="https://www.hackerrank.com/contests/cpc-53" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/flashcards app.png" alt=""></div>
+      <span class="card-tag">Tutorial</span>
+      <div class="card-title">Python Flashcards App</div>
+      <p class="card-desc">In this tutorial, you'll build a flashcards app in Python, step by step.
+You'll start with the simplest possible version - one question, one answer - and gradually turn it into a fully‑featured app with multiple questions, shuffling, scoring, and user‑selected options.
+Each level adds one clear improvement to the previous version, so you can see exactly how small changes grow into a real program.</p>
+      <a class="card-btn" href="https://docs.google.com/presentation/d/1YqQEgcHtuSFWh01qlRL3bds3W5TURYPzgP1OxGNcvzA/edit?usp=drivesdk" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/hackerrank contest 23-02-2026 solutions.png" alt=""></div>
+      <span class="card-tag">Solutions</span>
+      <div class="card-title">Contest Solutions 23-02-2026</div>
+      <p class="card-desc">This is the Solutions Tutorial to the Hackerrank Contest held on 23-02-2026.</p>
+      <a class="card-btn" href="https://docs.google.com/presentation/d/1C4tMtHTf0PbDgw9pUfKi4NUhKsJCW_tNBWgBcR0VGM8/edit?usp=sharing" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/hackerrank contest 23-02-2026.png" alt=""></div>
+      <span class="card-tag">Contest</span>
+      <div class="card-title">Hackerrank Contest 23/02/2026</div>
+      <p class="card-desc">This is the link to the Hackerrank Contest held on 23/02/2026.
+It includes a Solutions Tutorial as well, which you can find in the next slide.</p>
+      <a class="card-btn" href="https://www.hackerrank.com/cpc1902" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="card-img"><img src="images/scratch platformer.png" alt=""></div>
+      <span class="card-tag">Tutorial</span>
+      <div class="card-title">Scratch Platformer Game</div>
+      <p class="card-desc">In this tutorial, you'll build a platformer game in Scratch, step by step.
+You'll control a player that jumps around, collects stars, and earns points, while a bat enemy chases you. If the bat touches you — game over.
+Each level adds one small upgrade, so you can clearly see how a simple game turns into a complete one.</p>
+      <a class="card-btn" href="https://docs.google.com/presentation/d/1hXzfmZRg2WTpjVgEAZXEzya-y2_D4NrTFEZf5jTvmrw/edit?usp=sharing" target="_blank">
+        <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open Link
+      </a>
+    </div>
+
+  </div>
+
+  <footer>
+    <span class="footer-text">Computer Programming Club <span class="footer-dot">■</span> South Breeze School</span>
+  </footer>
+
+</div>
+</body>
+</html>
