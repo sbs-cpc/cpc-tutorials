@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enter password</title>
+<title>CPC Tutorials</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700&family=Rajdhani:wght@300;400;500;600&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
 <style>
   /* --- inlined tutorials page, scoped under #app --- */
-  #app { display: none; }
-  #app.active { display: block; }
+  #app { display: block; }
 
   #app *, #app *::before, #app *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -310,214 +309,9 @@
     #app .club-name { font-size: 1.3rem; }
   }
 </style>
-<style>
-  * {
-    box-sizing: border-box;
-  }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: #1c7a5e;
-    overflow: hidden;
-    font-family: 'Rajdhani', sans-serif;
-  }
-
-  #stage {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #1c7a5e;
-    transition: background-color 0.8s ease;
-  }
-
-  .content {
-    display: flex;
-    align-items: center;
-    gap: 80px;
-    max-width: 900px;
-    width: 90%;
-  }
-
-  /* --- floating mascot --- */
-  .mascot-wrap {
-    flex-shrink: 0;
-    width: 300px;
-    height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .mascot-wrap img {
-    width: 100%;
-    height: auto;
-    animation: floatCycle 6s ease-in-out infinite;
-  }
-
-  @keyframes floatCycle {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    15%  { transform: translate(4px, -6px) rotate(0.8deg); }
-    30%  { transform: translate(-3px, 3px) rotate(-0.6deg); }
-    45%  { transform: translate(0, 0) rotate(0deg); }
-    50%  { transform: translate(0, 0) rotate(0deg); }
-    65%  { transform: translate(-4px, -4px) rotate(-0.8deg); }
-    80%  { transform: translate(3px, 5px) rotate(0.6deg); }
-    95%  { transform: translate(0, 0) rotate(0deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-  }
-
-  /* --- text side --- */
-  .text-side {
-    flex: 1;
-    color: #ffffff;
-  }
-
-  .title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 42px;
-    font-weight: 700;
-    line-height: 1.15;
-    margin: 0 0 20px;
-    letter-spacing: 0.5px;
-    color: #ffffff;
-  }
-
-  .description {
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.6;
-    color: #ffffff;
-    margin: 0 0 32px;
-    max-width: 420px;
-  }
-
-  /* --- password field --- */
-  .pw-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 420px;
-  }
-
-  #pw-input {
-    width: 100%;
-    background: #ffffff;
-    border: 2px solid #ffffff;
-    border-radius: 999px;
-    padding: 16px 24px;
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 17px;
-    font-weight: 600;
-    color: #14654d;
-    outline: none;
-    letter-spacing: 1px;
-  }
-
-  #pw-input::placeholder {
-    color: #14654d;
-    opacity: 0.6;
-    font-weight: 600;
-  }
-
-  #pw-input.wrong {
-    color: #c0392b;
-    border-color: #c0392b;
-    animation: shake 0.4s ease;
-  }
-
-  #pw-input.wrong::placeholder {
-    color: #c0392b;
-  }
-
-  @keyframes shake {
-    0%   { transform: translateX(0); }
-    15%  { transform: translateX(-10px); }
-    30%  { transform: translateX(9px); }
-    45%  { transform: translateX(-7px); }
-    60%  { transform: translateX(5px); }
-    75%  { transform: translateX(-3px); }
-    90%  { transform: translateX(2px); }
-    100% { transform: translateX(0); }
-  }
-
-  /* --- blackout --- */
-  #blackout {
-    position: fixed;
-    inset: 0;
-    background: #000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s ease;
-    z-index: 999;
-  }
-
-  #blackout.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  @media (max-width: 700px) {
-    .content {
-      flex-direction: column;
-      text-align: center;
-      gap: 32px;
-    }
-    .mascot-wrap {
-      width: 200px;
-      height: 200px;
-    }
-    .title {
-      font-size: 32px;
-    }
-    .description {
-      max-width: none;
-    }
-    .pw-form {
-      max-width: none;
-      width: 100%;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .mascot-wrap img {
-      animation: none;
-    }
-    #pw-input.wrong {
-      animation: none;
-    }
-  }
-</style>
 </head>
 <body>
-
-<div id="stage">
-  <div class="content">
-    <div class="mascot-wrap">
-      <img src="mascot.png" alt="Club mascot">
-    </div>
-
-    <div class="text-side">
-      <h1 class="title">CPC Tutorials</h1>
-      <p class="description">Browse and try out all the tutorials from last year to see what CPC covered before.</p>
-
-      <form class="pw-form" id="pw-form" autocomplete="off">
-        <input
-          type="text"
-          id="pw-input"
-          placeholder="Enter the password"
-          autocomplete="off"
-          autofocus
-        >
-      </form>
-    </div>
-  </div>
-</div>
-
-<div id="blackout"></div>
 
 <div id="app">
   <div class="bg-scan"></div>
@@ -537,6 +331,17 @@
     <div class="section-label">Tutorials &amp; Resources</div>
 
     <div class="cards-grid">
+
+      <div class="card">
+        <div class="card-img"><img src="images/kickoff-game-idea-form.png" alt=""></div>
+        <span class="card-tag">Form</span>
+        <div class="card-title">CPC 2026-27 Kickoff: Build-A-Game-Idea</div>
+        <p class="card-desc">In this form, you'll basically work on a game idea by following some simple questions. In the upcoming classes, we might actually teach you to build the very idea that you submit!</p>
+        <a class="card-btn" href="https://forms.gle/tyNV2A2BgRZiNqyk9" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
 
       <div class="card">
         <div class="card-img"><img src="images/farewell.png" alt=""></div>
@@ -639,51 +444,6 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
 
   </div>
 </div>
-
-<script>
-  const CORRECT_PASSWORD = "learnbybuilding6719";
-
-  const form = document.getElementById('pw-form');
-  const input = document.getElementById('pw-input');
-  const blackout = document.getElementById('blackout');
-  const app = document.getElementById('app');
-
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
-    attempt();
-  });
-
-  function attempt() {
-    if (input.value === CORRECT_PASSWORD) {
-      succeed();
-    } else {
-      fail();
-    }
-  }
-
-  function fail() {
-    input.classList.remove('wrong');
-    // force reflow so the shake animation can restart on repeated wrong tries
-    void input.offsetWidth;
-    input.classList.add('wrong');
-    input.value = '';
-    input.placeholder = 'Enter the password';
-  }
-
-  input.addEventListener('animationend', function () {
-    input.classList.remove('wrong');
-  });
-
-  function succeed() {
-    input.disabled = true;
-    blackout.classList.add('active');
-
-    setTimeout(function () {
-      app.classList.add('active');
-      blackout.classList.remove('active');
-    }, 1000);
-  }
-</script>
 
 </body>
 </html>
