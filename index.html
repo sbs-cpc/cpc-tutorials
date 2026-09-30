@@ -417,9 +417,30 @@
     border: 2px solid var(--border); border-top-color: var(--teal);
     animation: calcSpin 0.9s linear infinite;
   }
+  #app .calc-done {
+    display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1.1rem;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--teal);
+  }
+  #app .calc-dialog.done .calc-processing { display: none; }
+  #app .calc-dialog.done .calc-done { display: flex; }
+  #app .calc-tick { width: 72px; height: 72px; animation: calcPop 0.45s ease-out both; }
+  #app .calc-tick circle, #app .calc-tick path {
+    fill: none; stroke: var(--teal); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 160; stroke-dashoffset: 160;
+  }
+  #app .calc-tick circle { animation: calcDraw 0.5s ease-out forwards; }
+  #app .calc-tick path   { stroke-dasharray: 50; stroke-dashoffset: 50; animation: calcDraw 0.35s ease-out 0.35s forwards; }
   #app .calc-quiz-view { display: flex; flex-direction: column; gap: 1.25rem; flex: 1; }
 
-  #app .card.calc-recommended { animation: calcBounce 1.5s ease-out 1; border-color: rgba(28,232,160,0.45); }
+  #app .card.calc-recommended {
+    z-index: 2;
+    border-color: rgba(28,232,160,0.6);
+    transform-origin: 50% 50%;
+    animation: calcLift 0.9s cubic-bezier(.2,.9,.25,1.15) forwards,
+               calcHaloGlow 4.5s ease-in-out forwards,
+               calcHaloRing 1.5s ease-out 0.15s 3;
+  }
   #app .card-btn.calc-glow { position: relative; box-shadow: 0 0 14px rgba(28,232,160,0.25); }
   #app .card-btn.calc-glow::before,
   #app .card-btn.calc-glow::after {
@@ -432,16 +453,24 @@
   #app .card-btn.calc-glow::after { filter: blur(6px); opacity: 0.9; }
 
   @keyframes calcFade   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  @keyframes calcSpin   { to { transform: rotate(360deg); } }
   @keyframes calcTrace  { to { --calc-ang: 360deg; } }
-  @keyframes calcBounce {
-    0%, 100% { transform: translateY(0); }
-    15% { transform: translateY(-16px); } 30% { transform: translateY(0); }
-    45% { transform: translateY(-10px); } 60% { transform: translateY(0); }
-    75% { transform: translateY(-5px); }  90% { transform: translateY(0); }
+  @keyframes calcSpin   { to { transform: rotate(360deg); } }
+  @keyframes calcLift { from { transform: none; } to { transform: translateY(-12px) scale(1.03); } }
+  @keyframes calcHaloGlow {
+    0%   { box-shadow: 0 0 0 0 rgba(28,232,160,0), 0 0 0 0 rgba(28,232,160,0), 0 20px 50px rgba(0,0,0,0.5); }
+    18%  { box-shadow: 0 0 70px 22px rgba(28,232,160,0.50), 0 -40px 90px -4px rgba(28,232,160,0.50), 0 20px 50px rgba(0,0,0,0.5); }
+    38%  { box-shadow: 0 0 36px 8px rgba(28,232,160,0.30), 0 -24px 60px -8px rgba(28,232,160,0.35), 0 20px 50px rgba(0,0,0,0.5); }
+    56%  { box-shadow: 0 0 70px 22px rgba(28,232,160,0.50), 0 -40px 90px -4px rgba(28,232,160,0.50), 0 20px 50px rgba(0,0,0,0.5); }
+    100% { box-shadow: 0 0 0 0 rgba(28,232,160,0), 0 0 0 0 rgba(28,232,160,0), 0 20px 50px rgba(0,0,0,0); }
   }
+  @keyframes calcHaloRing {
+    0%   { outline: 2px solid rgba(28,232,160,0.8); outline-offset: 0; }
+    100% { outline: 2px solid rgba(28,232,160,0);   outline-offset: 46px; }
+  }
+  @keyframes calcDraw { to { stroke-dashoffset: 0; } }
+  @keyframes calcPop  { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); } }
   @media (prefers-reduced-motion: reduce) {
-    #app .card.calc-recommended { animation: none; }
+    #app .card.calc-recommended { animation: none; transform: translateY(-12px) scale(1.03); box-shadow: 0 0 50px 14px rgba(28,232,160,0.4); }
   }
   @media (max-width: 540px) { #app .calc-group { padding: 1.1rem; } }
 </style>
@@ -763,6 +792,10 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
         <div class="calc-spinner"></div>
         <div>Analyzing your answers…</div>
       </div>
+      <div class="calc-done" aria-live="polite">
+        <svg class="calc-tick" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30"/><path d="M22 37l10 10 18-21"/></svg>
+        <div>Your match is ready</div>
+      </div>
     </div>
   </div>
 </div>
@@ -836,9 +869,15 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
     fill.style.width = '100%';
     dialog.classList.add('processing');
     setTimeout(function () {
-      closeQuiz();
-      dialog.classList.remove('processing');
-      highlight(result);
+      // loading done: show tick, and scroll to the card instantly behind the overlay
+      dialog.classList.add('done');
+      var c = document.querySelector('#app [data-calc-level="' + result + '"]');
+      if (c) c.scrollIntoView({ block: 'center' });
+      setTimeout(function () {
+        closeQuiz();
+        dialog.classList.remove('processing', 'done');
+        highlight(result);
+      }, 900);
     }, 2000);
   }
 
@@ -846,14 +885,9 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
     var card = document.querySelector('#app [data-calc-level="' + result + '"]');
     if (!card) return;
     var btn = card.querySelector('.card-btn');
-    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(function () {
-      void card.offsetWidth;
-      card.classList.add('calc-recommended');
-      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduced) { btn.classList.add('calc-glow'); return; }
-      card.addEventListener('animationend', function () { btn.classList.add('calc-glow'); }, { once: true });
-    }, 600);
+    void card.offsetWidth;
+    card.classList.add('calc-recommended');
+    setTimeout(function () { btn.classList.add('calc-glow'); }, 700);
     btn.addEventListener('click', function () { btn.classList.remove('calc-glow'); }, { once: true });
   }
 
