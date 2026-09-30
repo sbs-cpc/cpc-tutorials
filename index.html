@@ -310,6 +310,142 @@
   }
 </style>
 
+<style>
+  /* --- Python Calculator group + quiz --- */
+  @property --calc-ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+
+  #app .calc-group {
+    border: 1px solid rgba(28,232,160,0.28);
+    border-radius: 10px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    background: rgba(28,232,160,0.02);
+    position: relative;
+  }
+  #app .calc-group .cards-grid { margin-bottom: 0; }
+  #app .calc-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--teal);
+    margin-bottom: 1.25rem;
+  }
+  #app .calc-quiz-btn {
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(28,232,160,0.08);
+    border: 1px solid var(--teal);
+    border-radius: 4px;
+    color: var(--teal);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  #app .calc-quiz-btn:hover, #app .calc-quiz-btn:focus-visible {
+    background: var(--teal); color: #050e0a; box-shadow: 0 0 18px rgba(28,232,160,0.4); outline: none;
+  }
+
+  #app .calc-overlay {
+    position: fixed; inset: 0; z-index: 10;
+    display: none; align-items: center; justify-content: center;
+    padding: 1.25rem;
+    background: rgba(4,7,8,0.82);
+    backdrop-filter: blur(3px);
+  }
+  #app .calc-overlay.open { display: flex; animation: calcFade 0.2s ease; }
+  #app .calc-dialog {
+    position: relative;
+    width: 100%; max-width: 520px; min-height: 320px;
+    background: var(--bg-card);
+    border: 1px solid rgba(28,232,160,0.3);
+    border-radius: 6px;
+    padding: 2rem 1.75rem 1.75rem;
+    display: flex; flex-direction: column; gap: 1.25rem;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 40px rgba(28,232,160,0.12);
+    overflow: hidden;
+  }
+  #app .calc-dialog::before, #app .calc-dialog::after {
+    content: ''; position: absolute; top: 0; left: 0; background: var(--teal); opacity: 0.8;
+  }
+  #app .calc-dialog::before { width: 60px; height: 2px; }
+  #app .calc-dialog::after  { width: 2px; height: 60px; }
+  #app .calc-close {
+    position: absolute; top: 0.6rem; right: 0.75rem;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-secondary); font-size: 1.6rem; line-height: 1;
+    transition: color 0.15s ease;
+  }
+  #app .calc-close:hover { color: var(--teal); }
+  #app .calc-meta {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--teal-dim);
+  }
+  #app .calc-bar { height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  #app .calc-bar-fill { height: 100%; width: 0; background: var(--teal); transition: width 0.3s ease; }
+  #app .calc-q {
+    font-family: var(--font-display); font-size: 1.05rem; font-weight: 600;
+    line-height: 1.5; letter-spacing: 0.02em; color: var(--text-primary);
+    flex: 1; animation: calcFade 0.3s ease;
+  }
+  #app .calc-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+  #app .calc-answers button {
+    padding: 0.85rem 1rem;
+    background: transparent; border: 1px solid var(--teal-dim); border-radius: 3px;
+    color: var(--teal); font-family: var(--font-mono); font-size: 13px;
+    letter-spacing: 0.16em; text-transform: uppercase; cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  }
+  #app .calc-answers button:hover, #app .calc-answers button:focus-visible {
+    background: var(--teal); color: #050e0a; box-shadow: 0 0 14px rgba(28,232,160,0.35); outline: none;
+  }
+  #app .calc-processing {
+    display: none; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem;
+    font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--text-secondary);
+  }
+  #app .calc-dialog.processing .calc-quiz-view { display: none; }
+  #app .calc-dialog.processing .calc-processing { display: flex; }
+  #app .calc-dialog.processing .calc-close { display: none; }
+  #app .calc-spinner {
+    width: 44px; height: 44px; border-radius: 50%;
+    border: 2px solid var(--border); border-top-color: var(--teal);
+    animation: calcSpin 0.9s linear infinite;
+  }
+  #app .calc-quiz-view { display: flex; flex-direction: column; gap: 1.25rem; flex: 1; }
+
+  #app .card.calc-recommended { animation: calcBounce 1.5s ease-out 1; border-color: rgba(28,232,160,0.45); }
+  #app .card-btn.calc-glow { position: relative; box-shadow: 0 0 14px rgba(28,232,160,0.25); }
+  #app .card-btn.calc-glow::before,
+  #app .card-btn.calc-glow::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 6px; padding: 2px; pointer-events: none;
+    background: conic-gradient(from var(--calc-ang), transparent 0 55%, var(--teal) 85%, #d9fff0 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    animation: calcTrace 2.2s linear infinite;
+  }
+  #app .card-btn.calc-glow::after { filter: blur(6px); opacity: 0.9; }
+
+  @keyframes calcFade   { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes calcSpin   { to { transform: rotate(360deg); } }
+  @keyframes calcTrace  { to { --calc-ang: 360deg; } }
+  @keyframes calcBounce {
+    0%, 100% { transform: translateY(0); }
+    15% { transform: translateY(-16px); } 30% { transform: translateY(0); }
+    45% { transform: translateY(-10px); } 60% { transform: translateY(0); }
+    75% { transform: translateY(-5px); }  90% { transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #app .card.calc-recommended { animation: none; }
+  }
+  @media (max-width: 540px) { #app .calc-group { padding: 1.1rem; } }
+</style>
+
 </head>
 <body>
 
@@ -329,6 +465,51 @@
     </header>
 
     <div class="section-label">Tutorials &amp; Resources</div>
+
+    <!-- ===== PYTHON CALCULATOR GROUP ===== -->
+    <div class="calc-group" id="calcGroup">
+      <div class="calc-title">PYTHON CALCULATOR</div>
+
+      <button class="calc-quiz-btn" id="calcQuizBtn" type="button">Click to find out which one you should do</button>
+
+      <div class="cards-grid">
+
+        <div class="card" data-calc-level="beginner">
+          <div class="card-img"><img src="images/python-calculator-beginner.png" alt=""></div>
+          <span class="card-tag">Beginner</span>
+          <div class="card-title">Python Calculator — Beginner</div>
+          <p class="card-desc">Basic calculator using input, variables, mathematical operations, and presenting results.</p>
+          <a class="card-btn" href="https://docs.google.com/presentation/d/1NIl4GvpgVa1ffBnLYEdXDL4748KzU4QN1aGnVV_PlFQ/edit?usp=sharing" target="_blank">
+            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open Link
+          </a>
+        </div>
+
+        <div class="card" data-calc-level="intermediate">
+          <div class="card-img"><img src="images/python-calculator-intermediate.png" alt=""></div>
+          <span class="card-tag">Intermediate</span>
+          <div class="card-title">Python Calculator — Intermediate</div>
+          <p class="card-desc">Interactive calculator using user choices, if statements, and input validation.</p>
+          <a class="card-btn" href="https://docs.google.com/presentation/d/1_6YYOoSHFjxDaqwMC-9kTAIqKMfpA96Mi6cCCxX7ahY/edit?usp=sharing" target="_blank">
+            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open Link
+          </a>
+        </div>
+
+        <div class="card" data-calc-level="advanced">
+          <div class="card-img"><img src="images/python-calculator-advanced.png" alt=""></div>
+          <span class="card-tag">Advanced</span>
+          <div class="card-title">Python Calculator — Advanced</div>
+          <p class="card-desc">Structured calculator using functions, parameters, menus, and program flow.</p>
+          <a class="card-btn" href="https://docs.google.com/presentation/d/1giBznOZyaJtrPUsQBtzeQGm6gi7Pr234GJhmXa-ImQs/edit?usp=sharing" target="_blank">
+            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Open Link
+          </a>
+        </div>
+
+      </div>
+    </div>
+    <!-- ===== END PYTHON CALCULATOR GROUP ===== -->
 
     <div class="cards-grid">
 
@@ -553,7 +734,129 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
     </footer>
 
   </div>
+
+  <!-- ===== QUIZ MODAL ===== -->
+  <div class="calc-overlay" id="calcOverlay">
+    <div class="calc-dialog" id="calcDialog" role="dialog" aria-modal="true" aria-labelledby="calcQ">
+      <button class="calc-close" id="calcClose" type="button" aria-label="Close quiz">&times;</button>
+      <div class="calc-quiz-view">
+        <div class="calc-meta" id="calcMeta"></div>
+        <div class="calc-bar"><div class="calc-bar-fill" id="calcFill"></div></div>
+        <div class="calc-q" id="calcQ"></div>
+        <div class="calc-answers">
+          <button type="button" data-ans="yes">Yes</button>
+          <button type="button" data-ans="no">No</button>
+        </div>
+      </div>
+      <div class="calc-processing" aria-live="polite">
+        <div class="calc-spinner"></div>
+        <div>Analyzing your answers…</div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<script>
+(function () {
+  var QUESTIONS = {
+    beginner: [
+      'Can you take two numbers as input and store them in variables?',
+      'Can you use +, -, *, and / to perform calculations with those numbers?',
+      'Can you present the results to the user in a clear way?',
+      'Can you put all of these together to make a basic calculator?'
+    ],
+    intermediate: [
+      'Can you let the user choose which mathematical operation the calculator performs?',
+      'Can you use an if statement to make the program respond differently to different choices?',
+      'Can you make the program detect an invalid choice and respond appropriately?'
+    ]
+  };
+
+  var overlay = document.getElementById('calcOverlay');
+  var dialog  = document.getElementById('calcDialog');
+  var meta    = document.getElementById('calcMeta');
+  var fill    = document.getElementById('calcFill');
+  var qEl     = document.getElementById('calcQ');
+  var openBtn = document.getElementById('calcQuizBtn');
+  var closeBtn = document.getElementById('calcClose');
+
+  var level, idx, sawNo, busy;
+
+  function clearHighlight() {
+    document.querySelectorAll('#app .calc-recommended').forEach(function (c) { c.classList.remove('calc-recommended'); });
+    document.querySelectorAll('#app .calc-glow').forEach(function (b) { b.classList.remove('calc-glow'); });
+  }
+
+  function render() {
+    var list = QUESTIONS[level];
+    meta.textContent = level + '  ·  ' + (idx + 1) + ' / ' + list.length;
+    fill.style.width = (idx / list.length * 100) + '%';
+    qEl.style.animation = 'none'; void qEl.offsetWidth; qEl.style.animation = '';
+    qEl.textContent = (idx + 1 + (level === 'intermediate' ? QUESTIONS.beginner.length : 0)) + '. ' + list[idx];
+  }
+
+  function openQuiz() {
+    clearHighlight();
+    level = 'beginner'; idx = 0; sawNo = false; busy = false;
+    dialog.classList.remove('processing');
+    render();
+    overlay.classList.add('open');
+    dialog.querySelector('[data-ans="yes"]').focus();
+  }
+
+  function closeQuiz() { overlay.classList.remove('open'); }
+
+  function answer(isYes) {
+    if (busy) return;
+    if (!isYes) sawNo = true;
+    idx++;
+    if (idx < QUESTIONS[level].length) { render(); return; }
+
+    if (level === 'beginner') {
+      if (sawNo) return finish('beginner');
+      level = 'intermediate'; idx = 0; sawNo = false; render();
+    } else {
+      finish(sawNo ? 'intermediate' : 'advanced');
+    }
+  }
+
+  function finish(result) {
+    busy = true;
+    fill.style.width = '100%';
+    dialog.classList.add('processing');
+    setTimeout(function () {
+      closeQuiz();
+      dialog.classList.remove('processing');
+      highlight(result);
+    }, 2000);
+  }
+
+  function highlight(result) {
+    var card = document.querySelector('#app [data-calc-level="' + result + '"]');
+    if (!card) return;
+    var btn = card.querySelector('.card-btn');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(function () {
+      void card.offsetWidth;
+      card.classList.add('calc-recommended');
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduced) { btn.classList.add('calc-glow'); return; }
+      card.addEventListener('animationend', function () { btn.classList.add('calc-glow'); }, { once: true });
+    }, 600);
+    btn.addEventListener('click', function () { btn.classList.remove('calc-glow'); }, { once: true });
+  }
+
+  openBtn.addEventListener('click', openQuiz);
+  closeBtn.addEventListener('click', closeQuiz);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay && !busy) closeQuiz(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open') && !busy) closeQuiz();
+  });
+  dialog.querySelectorAll('[data-ans]').forEach(function (b) {
+    b.addEventListener('click', function () { answer(b.dataset.ans === 'yes'); });
+  });
+})();
+</script>
 
 </body>
 </html>
