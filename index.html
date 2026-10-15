@@ -314,43 +314,6 @@
   /* --- Python Calculator group + quiz --- */
   @property --calc-ang { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
 
-  #app .calc-group {
-    border: 1px solid rgba(28,232,160,0.28);
-    border-radius: 10px;
-    padding: 1.75rem;
-    margin-bottom: 1.25rem;
-    background: rgba(28,232,160,0.02);
-    position: relative;
-  }
-  #app .calc-group .cards-grid { margin-bottom: 0; }
-  #app .calc-title {
-    font-family: var(--font-display);
-    font-size: 1.15rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--teal);
-    margin-bottom: 1.25rem;
-  }
-  #app .calc-quiz-btn {
-    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-    width: 100%;
-    margin-bottom: 1.5rem;
-    padding: 1rem 1.25rem;
-    background: rgba(28,232,160,0.08);
-    border: 1px solid var(--teal);
-    border-radius: 4px;
-    color: var(--teal);
-    font-family: var(--font-mono);
-    font-size: 14px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
-  }
-  #app .calc-quiz-btn:hover, #app .calc-quiz-btn:focus-visible {
-    background: var(--teal); color: #050e0a; box-shadow: 0 0 18px rgba(28,232,160,0.4); outline: none;
-  }
-
   #app .calc-overlay {
     position: fixed; inset: 0; z-index: 10;
     display: none; align-items: center; justify-content: center;
@@ -472,7 +435,13 @@
   @media (prefers-reduced-motion: reduce) {
     #app .card.calc-recommended { animation: none; transform: translateY(-12px) scale(1.03); box-shadow: 0 0 50px 14px rgba(28,232,160,0.4); }
   }
-  @media (max-width: 540px) { #app .calc-group { padding: 1.1rem; } }
+  #app .card-btn { cursor: pointer; }
+  #app .quiz-card-img {
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at center, rgba(28,232,160,0.18) 0%, rgba(28,232,160,0.03) 70%);
+    font-family: var(--font-display); font-size: 4rem; font-weight: 700; color: var(--teal);
+    text-shadow: 0 0 24px rgba(28,232,160,0.5);
+  }
 </style>
 
 </head>
@@ -496,7 +465,7 @@
     <div class="section-label">Tutorials &amp; Resources</div>
 
     <!-- ===== GAME JAM 01 ===== -->
-    <div class="cards-grid" style="margin-bottom: 1.25rem;">
+    <div class="cards-grid">
 
       <div class="card">
         <div class="card-img"><img src="images/cpc-gamejam1-website.png" alt=""></div>
@@ -520,66 +489,60 @@
         </a>
       </div>
 
-    </div>
-    <!-- ===== END GAME JAM 01 ===== -->
-
-    <!-- ===== PYTHON CALCULATOR GROUP ===== -->
-    <div class="calc-group" id="calcGroup">
-      <div class="calc-title">PYTHON CALCULATOR</div>
-
-      <button class="calc-quiz-btn" id="calcQuizBtn" type="button">Click to find out which one you should do</button>
-
-      <div class="cards-grid">
-
-        <div class="card" data-calc-level="beginner">
-          <div class="card-img"><img src="images/python-calculator-beginner.png" alt=""></div>
-          <span class="card-tag">Beginner</span>
-          <div class="card-title">Python Calculator — Beginner</div>
-          <p class="card-desc">Basic calculator using input, variables, mathematical operations, and presenting results.</p>
-          <a class="card-btn" href="https://docs.google.com/presentation/d/1NIl4GvpgVa1ffBnLYEdXDL4748KzU4QN1aGnVV_PlFQ/edit?usp=sharing" target="_blank">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Open Link
-          </a>
-        </div>
-
-        <div class="card" data-calc-level="intermediate">
-          <div class="card-img"><img src="images/python-calculator-intermediate.png" alt=""></div>
-          <span class="card-tag">Intermediate</span>
-          <div class="card-title">Python Calculator — Intermediate</div>
-          <p class="card-desc">Interactive calculator using user choices, if statements, and input validation.</p>
-          <a class="card-btn" href="https://docs.google.com/presentation/d/1_6YYOoSHFjxDaqwMC-9kTAIqKMfpA96Mi6cCCxX7ahY/edit?usp=sharing" target="_blank">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Open Link
-          </a>
-        </div>
-
-        <div class="card" data-calc-level="advanced">
-          <div class="card-img"><img src="images/python-calculator-advanced.png" alt=""></div>
-          <span class="card-tag">Advanced</span>
-          <div class="card-title">Python Calculator — Advanced</div>
-          <p class="card-desc">Structured calculator using functions, parameters, menus, and program flow.</p>
-          <a class="card-btn" href="https://docs.google.com/presentation/d/1giBznOZyaJtrPUsQBtzeQGm6gi7Pr234GJhmXa-ImQs/edit?usp=sharing" target="_blank">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Open Link
-          </a>
-        </div>
-
-        <div class="card">
-          <div class="card-img"><img src="images/python-calculator-feedback.png" alt=""></div>
-          <span class="card-tag">Feedback</span>
-          <div class="card-title">Python Calculator Feedback Form</div>
-          <p class="card-desc">This form is to hear about your experience in today’s class, how far you progressed, and how we can improve future classes!</p>
-          <a class="card-btn" href="https://forms.gle/FM8vZWX3oeCv5xVF9" target="_blank">
-            <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Open Link
-          </a>
-        </div>
-
+      <div class="card">
+        <div class="card-img quiz-card-img">?</div>
+        <span class="card-tag">Quiz</span>
+        <div class="card-title">Which Python Calculator Should You Do?</div>
+        <p class="card-desc">Answer a few yes/no questions to find out which Python Calculator tutorial matches your level.</p>
+        <button class="card-btn" id="calcQuizBtn" type="button">
+          <svg class="btn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          Start Quiz
+        </button>
       </div>
-    </div>
-    <!-- ===== END PYTHON CALCULATOR GROUP ===== -->
 
-    <div class="cards-grid">
+      <div class="card" data-calc-level="beginner">
+        <div class="card-img"><img src="images/python-calculator-beginner.png" alt=""></div>
+        <span class="card-tag">Beginner</span>
+        <div class="card-title">Python Calculator — Beginner</div>
+        <p class="card-desc">Basic calculator using input, variables, mathematical operations, and presenting results.</p>
+        <a class="card-btn" href="https://docs.google.com/presentation/d/1NIl4GvpgVa1ffBnLYEdXDL4748KzU4QN1aGnVV_PlFQ/edit?usp=sharing" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card" data-calc-level="intermediate">
+        <div class="card-img"><img src="images/python-calculator-intermediate.png" alt=""></div>
+        <span class="card-tag">Intermediate</span>
+        <div class="card-title">Python Calculator — Intermediate</div>
+        <p class="card-desc">Interactive calculator using user choices, if statements, and input validation.</p>
+        <a class="card-btn" href="https://docs.google.com/presentation/d/1_6YYOoSHFjxDaqwMC-9kTAIqKMfpA96Mi6cCCxX7ahY/edit?usp=sharing" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card" data-calc-level="advanced">
+        <div class="card-img"><img src="images/python-calculator-advanced.png" alt=""></div>
+        <span class="card-tag">Advanced</span>
+        <div class="card-title">Python Calculator — Advanced</div>
+        <p class="card-desc">Structured calculator using functions, parameters, menus, and program flow.</p>
+        <a class="card-btn" href="https://docs.google.com/presentation/d/1giBznOZyaJtrPUsQBtzeQGm6gi7Pr234GJhmXa-ImQs/edit?usp=sharing" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="card-img"><img src="images/python-calculator-feedback.png" alt=""></div>
+        <span class="card-tag">Feedback</span>
+        <div class="card-title">Python Calculator Feedback Form</div>
+        <p class="card-desc">This form is to hear about your experience in today’s class, how far you progressed, and how we can improve future classes!</p>
+        <a class="card-btn" href="https://forms.gle/FM8vZWX3oeCv5xVF9" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
 
       <div class="card">
         <div class="card-img"><img src="images/snowman avoid fireballs.png" alt=""></div>
