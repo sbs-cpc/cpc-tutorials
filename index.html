@@ -442,6 +442,47 @@
     font-family: var(--font-display); font-size: 4rem; font-weight: 700; color: var(--teal);
     text-shadow: 0 0 24px rgba(28,232,160,0.5);
   }
+  /* --- To-Do quiz (code-input questions) --- */
+  #app #todoDialog { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  #app .todo-input {
+    width: 100%; padding: 0.8rem 1rem;
+    background: rgba(0,0,0,0.35);
+    border: 1px solid var(--teal-dim); border-radius: 3px;
+    color: var(--text-primary);
+    font-family: var(--font-mono); font-size: 16px; letter-spacing: 0.02em;
+    transition: border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+  }
+  #app .todo-input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 14px rgba(28,232,160,0.25); }
+  #app .todo-input::placeholder { color: var(--text-muted); }
+  #app .todo-msg {
+    min-height: 1.3em;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-muted); line-height: 1.4;
+  }
+  #app .calc-answers button.todo-skip { border-color: var(--text-muted); color: var(--text-secondary); }
+  #app .calc-answers button.todo-skip:hover,
+  #app .calc-answers button.todo-skip:focus-visible {
+    background: var(--text-secondary); border-color: var(--text-secondary); color: #050e0a; box-shadow: none;
+  }
+
+  #app .calc-dialog.todo-wrong { border-color: rgba(255,77,94,0.75); box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,77,94,0.28); }
+  #app .calc-dialog.todo-wrong::before, #app .calc-dialog.todo-wrong::after { background: #ff4d5e; }
+  #app .calc-dialog.todo-wrong .todo-input { border-color: #ff4d5e; color: #ff8591; box-shadow: 0 0 14px rgba(255,77,94,0.3); }
+  #app .calc-dialog.todo-wrong .todo-msg { color: #ff6b7a; }
+  #app .calc-dialog.todo-shake { animation: todoShake 0.45s ease; }
+
+  @keyframes todoShake {
+    0%, 100% { transform: translateX(0); }
+    15% { transform: translateX(-10px); }
+    30% { transform: translateX(9px); }
+    45% { transform: translateX(-7px); }
+    60% { transform: translateX(6px); }
+    75% { transform: translateX(-3px); }
+    90% { transform: translateX(2px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #app .calc-dialog.todo-shake { animation: none; }
+  }
 </style>
 
 </head>
@@ -464,9 +505,54 @@
 
     <div class="section-label">Tutorials &amp; Resources</div>
 
-    <!-- ===== GAME JAM 01 ===== -->
     <div class="cards-grid">
 
+      <!-- ===== PYTHON TO-DO APP ===== -->
+      <div class="card">
+        <div class="card-img"><img src="images/to-do-forms.png" alt=""></div>
+        <span class="card-tag">Feedback</span>
+        <div class="card-title">Python To-Do List App Feedback Form</div>
+        <p class="card-desc">This form is to know what you thought about this tutorial</p>
+        <a class="card-btn" href="https://forms.gle/jcXqrKC2EL8w5qD88" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card" data-todo-level="advanced">
+        <div class="card-img"><img src="images/to-do-python-advanced.jpg" alt=""></div>
+        <span class="card-tag">Advanced</span>
+        <div class="card-title">Python To-Do App — Advanced</div>
+        <p class="card-desc">Build the same to-do app with only instructions and clues. Challenge yourself, and take help only when you get stuck.</p>
+        <a class="card-btn" href="https://docs.google.com/presentation/d/1-rEVCehkW_HU20zDvOlwqaPH9L19Rba45tPIOALjs1w/edit?usp=sharing" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card" data-todo-level="beginner">
+        <div class="card-img"><img src="images/to-do-python-beginner.jpg" alt=""></div>
+        <span class="card-tag">Beginner</span>
+        <div class="card-title">Python To-Do App — Beginner</div>
+        <p class="card-desc">Build a to-do app in Python step by step. Every clue comes with a clear explanation, so it's a good pick if you're still learning Python or don't feel confident yet.</p>
+        <a class="card-btn" href="https://docs.google.com/presentation/d/1rkuvtvP_rMZd5YoM5MDsgKCn1rU3e-qe/edit?usp=sharing&ouid=110562209681156957714&rtpof=true&sd=true" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card">
+        <div class="card-img quiz-card-img">?</div>
+        <span class="card-tag">Quiz</span>
+        <div class="card-title">Which To-Do List Tutorial Should You Do?</div>
+        <p class="card-desc">Answer a few short coding questions to find out whether the beginner or advanced Python To-Do List tutorial matches your level.</p>
+        <button class="card-btn" id="todoQuizBtn" type="button">
+          <svg class="btn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          Start Quiz
+        </button>
+      </div>
+
+      <!-- ===== GAME JAM 01 ===== -->
       <div class="card">
         <div class="card-img"><img src="images/cpc-gamejam1-website.png" alt=""></div>
         <span class="card-tag">Showcase</span>
@@ -789,6 +875,32 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
       </div>
     </div>
   </div>
+
+  <!-- ===== TO-DO QUIZ MODAL ===== -->
+  <div class="calc-overlay" id="todoOverlay">
+    <div class="calc-dialog" id="todoDialog" role="dialog" aria-modal="true" aria-labelledby="todoQ">
+      <button class="calc-close" id="todoClose" type="button" aria-label="Close quiz">&times;</button>
+      <div class="calc-quiz-view">
+        <div class="calc-meta" id="todoMeta"></div>
+        <div class="calc-bar"><div class="calc-bar-fill" id="todoFill"></div></div>
+        <div class="calc-q" id="todoQ"></div>
+        <input class="todo-input" id="todoInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Type your code here" aria-labelledby="todoQ">
+        <div class="todo-msg" id="todoMsg" aria-live="polite"></div>
+        <div class="calc-answers">
+          <button type="button" id="todoSubmit">Submit</button>
+          <button type="button" class="todo-skip" id="todoSkip">Skip</button>
+        </div>
+      </div>
+      <div class="calc-processing" aria-live="polite">
+        <div class="calc-spinner"></div>
+        <div>Analyzing your answers…</div>
+      </div>
+      <div class="calc-done" aria-live="polite">
+        <svg class="calc-tick" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30"/><path d="M22 37l10 10 18-21"/></svg>
+        <div>Your match is ready</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -890,6 +1002,161 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
   });
   dialog.querySelectorAll('[data-ans]').forEach(function (b) {
     b.addEventListener('click', function () { answer(b.dataset.ans === 'yes'); });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var PASS_MARK = 4; // correct answers (out of 5) needed to be sent to Advanced
+  var HINT = 'Two tries per question. Skipping scores zero.';
+
+  // Each answer is matched with a regex. Spacing is flexible, but the names,
+  // messages and numbers have to be exact. Quotes can be " or ' (they must match).
+  var QS = [
+    { q: 'Create an empty list using a variable called names.',
+      re: /^\s*names\s*=\s*(\[\s*\]|list\(\s*\))\s*$/ },
+    { q: 'Inside a variable called name, store an input with the message exactly "Enter your name: "',
+      re: /^\s*name\s*=\s*input\(\s*(["'])Enter your name: \1\s*\)\s*$/ },
+    { q: 'Inside a variable called age, store an input with the message exactly "Enter your age: " and convert it to an int.',
+      re: /^\s*age\s*=\s*int\(\s*input\(\s*(["'])Enter your age: \1\s*\)\s*\)\s*$/ },
+    { q: 'Write the first line of a for loop that goes from 1 to 20, using the variable i.',
+      re: /^\s*for\s+i\s+in\s+range\(\s*1\s*,\s*21\s*\)\s*:\s*$/ },
+    { q: 'The variable name holds the user’s name. Print "Hello " followed by name, joined with +.',
+      re: /^\s*print\(\s*(["'])Hello \1\s*\+\s*name\s*\)\s*$/ }
+  ];
+
+  var overlay   = document.getElementById('todoOverlay');
+  var dialog    = document.getElementById('todoDialog');
+  var meta      = document.getElementById('todoMeta');
+  var fill      = document.getElementById('todoFill');
+  var qEl       = document.getElementById('todoQ');
+  var input     = document.getElementById('todoInput');
+  var msg       = document.getElementById('todoMsg');
+  var submitBtn = document.getElementById('todoSubmit');
+  var skipBtn   = document.getElementById('todoSkip');
+  var openBtn   = document.getElementById('todoQuizBtn');
+  var closeBtn  = document.getElementById('todoClose');
+
+  var qi, tries, score, busy, session = 0;
+
+  function clearHighlight() {
+    document.querySelectorAll('#app .calc-recommended').forEach(function (c) { c.classList.remove('calc-recommended'); });
+    document.querySelectorAll('#app .calc-glow').forEach(function (b) { b.classList.remove('calc-glow'); });
+  }
+
+  function setWrong(on, text) {
+    dialog.classList.toggle('todo-wrong', on);
+    msg.textContent = text;
+  }
+
+  function shake() {
+    dialog.classList.remove('todo-shake');
+    void dialog.offsetWidth;
+    dialog.classList.add('todo-shake');
+  }
+
+  function render() {
+    meta.textContent = 'to-do  ·  ' + (qi + 1) + ' / ' + QS.length;
+    fill.style.width = (qi / QS.length * 100) + '%';
+    qEl.style.animation = 'none'; void qEl.offsetWidth; qEl.style.animation = '';
+    qEl.textContent = (qi + 1) + '. ' + QS[qi].q;
+    input.value = '';
+    tries = 0;
+    dialog.classList.remove('todo-shake');
+    setWrong(false, HINT);
+    input.focus();
+  }
+
+  function openQuiz() {
+    session++;
+    clearHighlight();
+    qi = 0; score = 0; busy = false;
+    dialog.classList.remove('processing', 'done', 'todo-wrong', 'todo-shake');
+    overlay.classList.add('open');
+    render();
+  }
+
+  function closeQuiz() { session++; overlay.classList.remove('open'); }
+
+  function advance() {
+    qi++;
+    if (qi < QS.length) render(); else finish();
+  }
+
+  function submit() {
+    if (busy) return;
+    var v = input.value;
+    if (!v.trim()) { input.focus(); return; }
+
+    if (QS[qi].re.test(v)) { score++; advance(); return; }
+
+    tries++;
+    shake();
+    if (tries < 2) {
+      setWrong(true, 'Not quite. You have one more try.');
+      input.select();
+      return;
+    }
+    setWrong(true, 'Not quite. Moving on…');
+    busy = true;
+    var s = session;
+    setTimeout(function () {
+      if (s !== session) return;
+      busy = false;
+      advance();
+    }, 900);
+  }
+
+  function skip() {
+    if (busy) return;
+    advance(); // skipped = zero points for this question
+  }
+
+  function finish() {
+    busy = true;
+    var result = score >= PASS_MARK ? 'advanced' : 'beginner';
+    fill.style.width = '100%';
+    dialog.classList.remove('todo-wrong', 'todo-shake');
+    dialog.classList.add('processing');
+    setTimeout(function () {
+      dialog.classList.add('done');
+      var c = document.querySelector('#app [data-todo-level="' + result + '"]');
+      if (c) c.scrollIntoView({ block: 'center' });
+      setTimeout(function () {
+        closeQuiz();
+        dialog.classList.remove('processing', 'done');
+        highlight(result);
+      }, 900);
+    }, 2000);
+  }
+
+  function highlight(result) {
+    var card = document.querySelector('#app [data-todo-level="' + result + '"]');
+    if (!card) return;
+    var btn = card.querySelector('.card-btn');
+    void card.offsetWidth;
+    card.classList.add('calc-recommended');
+    setTimeout(function () { btn.classList.add('calc-glow'); }, 700);
+    btn.addEventListener('click', function () { btn.classList.remove('calc-glow'); }, { once: true });
+  }
+
+  // typing again clears the red state
+  input.addEventListener('input', function () {
+    if (busy) return;
+    if (dialog.classList.contains('todo-wrong')) setWrong(false, tries ? 'Last try.' : HINT);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); submit(); }
+  });
+
+  openBtn.addEventListener('click', openQuiz);
+  closeBtn.addEventListener('click', closeQuiz);
+  submitBtn.addEventListener('click', submit);
+  skipBtn.addEventListener('click', skip);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay && !busy) closeQuiz(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open') && !busy) closeQuiz();
   });
 })();
 </script>
