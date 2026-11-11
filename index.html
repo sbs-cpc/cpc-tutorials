@@ -443,7 +443,7 @@
     text-shadow: 0 0 24px rgba(28,232,160,0.5);
   }
   /* --- To-Do quiz (code-input questions) --- */
-  #app #todoDialog { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+  #app #todoDialog, #app #gcDialog { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
   #app .todo-input {
     width: 100%; padding: 0.8rem 1rem;
     background: rgba(0,0,0,0.35);
@@ -483,6 +483,19 @@
   @media (prefers-reduced-motion: reduce) {
     #app .calc-dialog.todo-shake { animation: none; }
   }
+
+  /* --- Contest quiz extras: "given" box + score line --- */
+  #app .quiz-ctx {
+    font-family: var(--font-mono); font-size: 12px; line-height: 1.5;
+    color: var(--text-secondary);
+    background: rgba(0,0,0,0.3);
+    border-left: 2px solid var(--teal-dim);
+    border-radius: 2px;
+    padding: 0.5rem 0.75rem;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  #app .quiz-ctx:empty { display: none; }
+  #app .calc-score { color: var(--text-secondary); font-size: 11px; letter-spacing: 0.2em; }
 </style>
 
 </head>
@@ -506,6 +519,40 @@
     <div class="section-label">Tutorials &amp; Resources</div>
 
     <div class="cards-grid">
+
+      <!-- ===== HACKERRANK 12-11: QUIZ + GUIDED + NON-GUIDED ===== -->
+      <div class="card">
+        <div class="card-img quiz-card-img">?</div>
+        <span class="card-tag">Quiz</span>
+        <div class="card-title">Guided or Non-Guided: Which Contest Should You Do?</div>
+        <p class="card-desc">Answer a few short coding questions to find out which version of this week's HackerRank contest matches your level.</p>
+        <button class="card-btn" id="gcQuizBtn" type="button">
+          <svg class="btn-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></svg>
+          Start Quiz
+        </button>
+      </div>
+
+      <div class="card" data-contest-level="guided">
+        <div class="card-img"><img src="images/cpc1211guided.png" alt=""></div>
+        <span class="card-tag">Contest</span>
+        <div class="card-title">Guided HackerRank Contest 12-11-2026</div>
+        <p class="card-desc">Every problem comes with a clear explanation of what it asks and the concepts you need. Great if you're still learning, and handy to revisit later.</p>
+        <a class="card-btn" href="https://www.hackerrank.com/cpc1211guided" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
+
+      <div class="card" data-contest-level="nonguided">
+        <div class="card-img"><img src="images/cpc1211nonguided.png" alt=""></div>
+        <span class="card-tag">Contest</span>
+        <div class="card-title">Non-Guided HackerRank Contest 12-11-2026</div>
+        <p class="card-desc">Just the problems, no hand-holding. Solve them on your own and put your Python skills to the test.</p>
+        <a class="card-btn" href="https://www.hackerrank.com/cpc1211nonguided" target="_blank">
+          <svg class="btn-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Open Link
+        </a>
+      </div>
 
       <!-- ===== PYTHON TO-DO APP ===== -->
       <div class="card">
@@ -901,6 +948,34 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
       </div>
     </div>
   </div>
+
+  <!-- ===== CONTEST (GUIDED / NON-GUIDED) QUIZ MODAL ===== -->
+  <div class="calc-overlay" id="gcOverlay">
+    <div class="calc-dialog" id="gcDialog" role="dialog" aria-modal="true" aria-labelledby="gcQ">
+      <button class="calc-close" id="gcClose" type="button" aria-label="Close quiz">&times;</button>
+      <div class="calc-quiz-view">
+        <div class="calc-meta" id="gcMeta"></div>
+        <div class="calc-bar"><div class="calc-bar-fill" id="gcFill"></div></div>
+        <div class="calc-q" id="gcQ"></div>
+        <div class="quiz-ctx" id="gcCtx"></div>
+        <input class="todo-input" id="gcInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Type your code here" aria-labelledby="gcQ">
+        <div class="todo-msg" id="gcMsg" aria-live="polite"></div>
+        <div class="calc-answers">
+          <button type="button" id="gcSubmit">Submit</button>
+          <button type="button" class="todo-skip" id="gcSkip">Skip</button>
+        </div>
+      </div>
+      <div class="calc-processing" aria-live="polite">
+        <div class="calc-spinner"></div>
+        <div>Analyzing your answers…</div>
+      </div>
+      <div class="calc-done" aria-live="polite">
+        <svg class="calc-tick" viewBox="0 0 72 72"><circle cx="36" cy="36" r="30"/><path d="M22 37l10 10 18-21"/></svg>
+        <div>Your match is ready</div>
+        <div class="calc-score" id="gcScore"></div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1133,6 +1208,245 @@ Each level adds one small upgrade, so you can clearly see how a simple game turn
 
   function highlight(result) {
     var card = document.querySelector('#app [data-todo-level="' + result + '"]');
+    if (!card) return;
+    var btn = card.querySelector('.card-btn');
+    void card.offsetWidth;
+    card.classList.add('calc-recommended');
+    setTimeout(function () { btn.classList.add('calc-glow'); }, 700);
+    btn.addEventListener('click', function () { btn.classList.remove('calc-glow'); }, { once: true });
+  }
+
+  // typing again clears the red state
+  input.addEventListener('input', function () {
+    if (busy) return;
+    if (dialog.classList.contains('todo-wrong')) setWrong(false, tries ? 'Last try.' : HINT);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); submit(); }
+  });
+
+  openBtn.addEventListener('click', openQuiz);
+  closeBtn.addEventListener('click', closeQuiz);
+  submitBtn.addEventListener('click', submit);
+  skipBtn.addEventListener('click', skip);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay && !busy) closeQuiz(); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open') && !busy) closeQuiz();
+  });
+})();
+</script>
+
+<script>
+/* ===== Contest quiz: Guided vs Non-Guided =====
+   8 code questions, two tries each. You can miss up to MAX_MISS questions
+   (wrong or skipped) and still be sent to the Non-Guided contest.
+
+   How answers are checked:
+   - "ok" answers are normalised first: extra spaces are ignored around
+     operators / brackets / commas / colons, and ' and " are treated the same
+     (but mixing both in one answer is rejected). Then compared with a list
+     of accepted ways to write the answer.
+   - "re" answers use a regex for the cases where exact spacing/quotes matter. */
+(function () {
+  var MAX_MISS = 2;
+  var HINT = 'Two tries per question. Skipping scores zero.';
+
+  function norm(s) {
+    s = String(s).trim().replace(/\s+/g, ' ');
+    s = s.replace(/ ?([%=!<>+\-*\/(),:\[\].]) ?/g, '$1');
+    return s.replace(/'/g, '"');
+  }
+
+  function ifLines(conds) {
+    var out = [];
+    conds.forEach(function (c) { out.push('if ' + c + ':'); out.push('if (' + c + '):'); });
+    return out;
+  }
+
+  // Q4: year divisible by 6 AND not divisible by 24 (either order, several spellings)
+  var Q4 = [];
+  var left  = ['year % 6 == 0', '(year % 6 == 0)'];
+  var right = ['year % 24 != 0', '(year % 24 != 0)', 'not year % 24 == 0',
+               'not (year % 24 == 0)', 'year % 24 > 0'];
+  left.forEach(function (l) {
+    right.forEach(function (r) { Q4.push(l + ' and ' + r); Q4.push(r + ' and ' + l); });
+  });
+
+  var QS = [
+    { tag: 'input',
+      q: 'Read one whole number from the input and store it in a variable called n.',
+      ctx: 'Input: 15',
+      re: [/^\s*n\s*=\s*int\(\s*input\(\s*(?:(["']).*?\1)?\s*\)\s*\)\s*$/] },
+
+    { tag: 'strings',
+      q: 'name holds a string and age holds an int. Print them like "Rahim is 15": the name, then the text " is ", then the age. Any method works.',
+      ctx: 'name = "Rahim"\nage = 15',
+      ok: ['print(f"{name} is {age}")',
+           'print(name + " is " + str(age))',
+           'print(name, "is", age)',
+           'print(name, "is", str(age))',
+           'print("{} is {}".format(name, age))'] },
+
+    { tag: 'if',
+      q: 'Write the first line of an if statement that checks whether n is divisible by 3.',
+      ctx: 'n = 9',
+      ok: ifLines(['n % 3 == 0', '0 == n % 3', 'not n % 3', 'n % 3 < 1']) },
+
+    { tag: 'logic',
+      q: 'Write the first line of an if statement that checks whether year is divisible by 6 but NOT divisible by 24.',
+      ctx: 'year = 18',
+      ok: ifLines(Q4) },
+
+    { tag: 'loops',
+      q: 'Write the first line of a for loop that goes through 1, 2, 3, ... up to n (including n), using the variable i.',
+      ctx: 'n = 4   →   1, 2, 3, 4',
+      ok: ['for i in range(1, n + 1):', 'for i in range(1, 1 + n):'] },
+
+    { tag: 'lists',
+      q: 'nums is a list. Add the value x to the end of it.',
+      ctx: 'nums = [3, 7]\nx = 5',
+      ok: ['nums.append(x)', 'nums += [x]', 'nums = nums + [x]'] },
+
+    { tag: 'split',
+      q: 'line holds numbers separated by spaces. Store them as a list in a variable called parts.',
+      ctx: 'line = "4 8 15"   →   ["4", "8", "15"]',
+      ok: ['parts = line.split()', 'parts = line.split(" ")', 'parts = line.strip().split()', 'parts = list(line.split())'] },
+
+    { tag: 'join',
+      q: 'words is a list of strings. Print them all on one line, separated by a comma and a space.',
+      ctx: 'words = ["ab", "cd", "ef"]   →   ab, cd, ef',
+      re: [/^\s*print\(\s*(["']), \1\s*\.\s*join\(\s*words\s*\)\s*\)\s*$/,
+           /^\s*print\(\s*\*\s*words\s*,\s*sep\s*=\s*(["']), \1\s*\)\s*$/] }
+  ];
+
+  // normalise the accepted answers once
+  QS.forEach(function (item) {
+    if (item.ok) item.ok = item.ok.map(norm);
+  });
+
+  function matches(item, raw) {
+    var i;
+    if (item.re) {
+      for (i = 0; i < item.re.length; i++) if (item.re[i].test(raw)) return true;
+    }
+    if (item.ok) {
+      if (raw.indexOf("'") > -1 && raw.indexOf('"') > -1) return false; // mixed quotes = syntax error
+      return item.ok.indexOf(norm(raw)) > -1;
+    }
+    return false;
+  }
+
+  var overlay   = document.getElementById('gcOverlay');
+  var dialog    = document.getElementById('gcDialog');
+  var meta      = document.getElementById('gcMeta');
+  var fill      = document.getElementById('gcFill');
+  var qEl       = document.getElementById('gcQ');
+  var ctxEl     = document.getElementById('gcCtx');
+  var input     = document.getElementById('gcInput');
+  var msg       = document.getElementById('gcMsg');
+  var scoreEl   = document.getElementById('gcScore');
+  var submitBtn = document.getElementById('gcSubmit');
+  var skipBtn   = document.getElementById('gcSkip');
+  var openBtn   = document.getElementById('gcQuizBtn');
+  var closeBtn  = document.getElementById('gcClose');
+
+  var qi, tries, score, busy, session = 0;
+
+  function clearHighlight() {
+    document.querySelectorAll('#app .calc-recommended').forEach(function (c) { c.classList.remove('calc-recommended'); });
+    document.querySelectorAll('#app .calc-glow').forEach(function (b) { b.classList.remove('calc-glow'); });
+  }
+
+  function setWrong(on, text) {
+    dialog.classList.toggle('todo-wrong', on);
+    msg.textContent = text;
+  }
+
+  function shake() {
+    dialog.classList.remove('todo-shake');
+    void dialog.offsetWidth;
+    dialog.classList.add('todo-shake');
+  }
+
+  function render() {
+    meta.textContent = 'contest  ·  ' + (qi + 1) + ' / ' + QS.length + '  ·  ' + QS[qi].tag;
+    fill.style.width = (qi / QS.length * 100) + '%';
+    qEl.style.animation = 'none'; void qEl.offsetWidth; qEl.style.animation = '';
+    qEl.textContent = (qi + 1) + '. ' + QS[qi].q;
+    ctxEl.textContent = QS[qi].ctx || '';
+    input.value = '';
+    tries = 0;
+    dialog.classList.remove('todo-shake');
+    setWrong(false, HINT);
+    input.focus();
+  }
+
+  function openQuiz() {
+    session++;
+    clearHighlight();
+    qi = 0; score = 0; busy = false;
+    dialog.classList.remove('processing', 'done', 'todo-wrong', 'todo-shake');
+    overlay.classList.add('open');
+    render();
+  }
+
+  function closeQuiz() { session++; overlay.classList.remove('open'); }
+
+  function advance() {
+    qi++;
+    if (qi < QS.length) render(); else finish();
+  }
+
+  function submit() {
+    if (busy) return;
+    var v = input.value;
+    if (!v.trim()) { input.focus(); return; }
+
+    if (matches(QS[qi], v)) { score++; advance(); return; }
+
+    tries++;
+    shake();
+    if (tries < 2) {
+      setWrong(true, 'Not quite. You have one more try.');
+      input.select();
+      return;
+    }
+    setWrong(true, 'Not quite. Moving on…');
+    busy = true;
+    var s = session;
+    setTimeout(function () {
+      if (s !== session) return;
+      busy = false;
+      advance();
+    }, 900);
+  }
+
+  function skip() {
+    if (busy) return;
+    advance(); // skipped = zero points for this question
+  }
+
+  function finish() {
+    busy = true;
+    var result = (QS.length - score) <= MAX_MISS ? 'nonguided' : 'guided';
+    fill.style.width = '100%';
+    scoreEl.textContent = score + ' / ' + QS.length + ' correct';
+    dialog.classList.remove('todo-wrong', 'todo-shake');
+    dialog.classList.add('processing');
+    setTimeout(function () {
+      dialog.classList.add('done');
+      var c = document.querySelector('#app [data-contest-level="' + result + '"]');
+      if (c) c.scrollIntoView({ block: 'center' });
+      setTimeout(function () {
+        closeQuiz();
+        dialog.classList.remove('processing', 'done');
+        highlight(result);
+      }, 1100);
+    }, 2000);
+  }
+
+  function highlight(result) {
+    var card = document.querySelector('#app [data-contest-level="' + result + '"]');
     if (!card) return;
     var btn = card.querySelector('.card-btn');
     void card.offsetWidth;
